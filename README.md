@@ -1,68 +1,100 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# dat-react-shopping-list
 
-## Available Scripts
+![Logo](https://dat-shopping-list.glitch.me/img/dat-shopping-list-96.png)
 
-In the project directory, you can run:
+[https://dat-react-shopping-list.glitch.me/](https://dat-react-shopping-list.glitch.me/)
 
-### `npm start`
+# Overview
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Adapted from [jimpick/dat-shopping-list](https://github.com/jimpick/dat-shopping-list)
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+Dat Shopping List is a "Progressive Web App" built to demonstrate how to use the
+new "multiwriter" capabalities that are being added to the [Dat Project](https://datproject.org/).
 
-### `npm test`
+The demo is a simple "to do list" app, in the spirit of the [TodoMVC](http://todomvc.com/) project.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+You can run it on any modern web browser. Also, you can run it on your mobile phone (iOS and Android), and it should work offline as well as online.
 
-### `npm run build`
+Check out the blog post:
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- [Demo: A Collaborative Shopping List Built On Dat](https://blog.datproject.org/2018/05/14/dat-shopping-list/)
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+![Quick Usage Gif](https://dat-shopping-list-video-jimpick.hashbase.io/dat-shopping-list-basic.gif)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Video Walkthrough
 
-### `npm run eject`
+Here is a short (2.5 minute) walkthrough of the demo.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- [Video Walkthrough (MP4)](https://dat-shopping-list-video-jimpick.hashbase.io/dat-shopping-list-1.mp4)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Quick Deploy / Free Hosting Options
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The demo is very easy to deploy, as it is self-contained, and requires no storage.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+There are many ways for you to run your own instance. You may want to run your own instance for privacy reasons, reliability reasons, or so you can customize it.
 
-## Learn More
+## Glitch
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+dat-shopping-list was developed on Glitch. Glitch is very nice. It is free, and it gives you a Node.js backend as well as an in-browser IDE with multi-user editing and debugging! Use the following link to fork your own copy of the Node.js gateway service and front-end user interface:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+[![Remix on Glitch](https://cdn.glitch.com/2703baf2-b643-4da7-ab91-7ee2a2d00b5b%2Fremix-button.svg)](https://glitch.com/edit/#!/remix/dat-react-shopping-list)
 
-### Code Splitting
+Note: Occasionally, Glitch gets into a state where it can't read from the disk. One way to get going again is to run: `rm -rf node_modules && npm install` on the console.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+<!-- ## Heroku
 
-### Analyzing the Bundle Size
+The app can easily be deployed to Heroku, which offers either 550-1000 hours a month for free (sleeps after 30 minutes of inactivity).
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+[Heroku Pricing](https://www.heroku.com/pricing)
 
-### Making a Progressive Web App
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+## Zeit now.sh
 
-### Advanced Configuration
+[Zeit](https://zeit.co/account/plan) offers a free "OSS" plan that works with the Dockerfile. Once you are signed up and have the command line tool installed, you can deploy straight from the github repo:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+```
+now jimpick/dat-shopping-list
+```
 
-### Deployment
+Note: If you use the OSS plan, the logs will be publicly available, which may not be what you want, as people will be able to see the keys of shopping lists that have been synced through the gateway, and they will be able to download the data. The logging could be changed to hide the keys.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+## Docker
 
-### `npm run build` fails to minify
+The git repo includes a simple Dockerfile. There is also a Docker image published here:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+[https://hub.docker.com/r/jimpick/dat-shopping-list/](https://hub.docker.com/r/jimpick/dat-shopping-list/)
+
+If you have docker installed, you should be able to run it:
+
+```
+docker run -p 5000:5000 jimpick/dat-shopping-list
+```
+
+Several of the major cloud hosting companies offer a free tier or introductory offer where you can run Docker images.
+
+## npm
+
+The demo is published on npm:
+
+[https://www.npmjs.com/package/dat-shopping-list](https://www.npmjs.com/package/dat-shopping-list)
+
+You can try it out using `npx`:
+
+```
+npx dat-shopping-list
+```
+
+or you can install it globally and run it:
+
+```
+npm install -g dat-shopping-list
+
+dat-shopping-list
+``` -->
+
+It should work on Mac and Linux. It hasn't been tested on Windows.
+
+# License
+
+MIT
