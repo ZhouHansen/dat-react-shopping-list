@@ -1,0 +1,58 @@
+{
+  "name": "dat-react-shopping-list",
+  "version": "0.0.8",
+  "license": "MIT",
+  "scripts": {
+    "start": "nodemon --exec babel-node src/websocket.js & razzle start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zhouhansen/dat-react-shopping-list.git"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.5.5",
+    "@jimpick/hyperdrive-hyperdb-backend": "^9.12.3-10",
+    "clipboard-copy": "^3.1.0",
+    "dat-colors": "^3.5.1",
+    "deep-equal": "^1.0.1",
+    "express": "^4.17.1",
+    "express-ws": "^4.0.0",
+    "hypercore-crypto": "^1.0.0",
+    "hyperdiscovery": "^10.0.1",
+    "monotonic-timestamp-base36": "^1.0.0",
+    "nanohtml": "^1.8.1",
+    "nodemon": "^1.19.1",
+    "pretty-hash": "^1.0.1",
+    "pump": "^3.0.0",
+    "random-access-idb": "^1.2.1",
+    "random-access-memory": "^3.1.1",
+    "razzle-zhc": "^3.0.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-focus-lock": "^2.0.5",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.0.1",
+    "redux": "^4.0.4",
+    "redux-saga": "^1.0.5",
+    "redux-thunk": "^2.3.0",
+    "socket.io": "^2.2.0",
+    "socket.io-client": "^2.2.0",
+    "styled-components": "^4.3.2",
+    "thunky": "^1.0.3",
+    "to-buffer": "^1.1.1",
+    "websocket-stream": "^5.5.0"
+  },
+  "devDependencies": {
+    "@babel/node": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-react": "^7.0.0",
+    "babel-plugin-inline-react-svg": "^1.1.0",
+    "babel-plugin-styled-components": "^1.10.6",
+    "create-razzle-app-zhc": "^3.0.1",
+    "prettier": "^1.18.2"
+  }
+}
