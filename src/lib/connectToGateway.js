@@ -147,16 +147,4 @@ function connectToGateway(archive, updateSyncStatus, updateConnecting) {
   return cancel;
 }
 
-function getNetworkAddress() {
-  const interfaces = os.networkInterfaces();
-  for (const name of Object.keys(interfaces)) {
-    for (const interf of interfaces[name]) {
-      const { address, family, internal } = interf;
-      if (family === "IPv4" && !internal) {
-        return address;
-      }
-    }
-  }
-}
-
 export default connectToGateway;

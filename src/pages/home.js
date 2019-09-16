@@ -60,7 +60,7 @@ class Home extends React.Component {
             ))}
           </ul>
           <div className={this.props.documents.length > 0 ? "notSolo" : "solo"}>
-            <img src="bg-landing-page.svg" />
+            <img src="bg-landing-page.svg" alt="" />
             <Link className="createButton" to={"/create"}>
               <Button label="Create a new Shopping List" />
             </Link>

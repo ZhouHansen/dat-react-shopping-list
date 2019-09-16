@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { netWork, app } from "../constants.js";
-import SvgIcon from "../../public/ic_sync_black_24px.svg";
+import { ReactComponent as SvgIcon } from "../assets/ic_sync_black_24px.svg";
 
 @connect(state => ({
   localUploadLength: state[netWork.constant("LocalUploadLength").name],

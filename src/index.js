@@ -1,32 +1,14 @@
-import http from 'http';
+import { Router } from "react-router-dom";
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import history from "./history";
+import Providers from "./providers";
 
-let app = require('./server').default;
+ReactDOM.render(
+  <Router history={history}>
+    <Providers></Providers>
+  </Router>,
 
-const server = http.createServer(app);
-
-let currentApp = app;
-
-server.listen(process.env.PORT || 3000, error => {
-  if (error) {
-    console.log(error);
-  }
-
-  console.log('🚀 started');
-});
-
-if (module.hot) {
-  console.log('✅  Server-side HMR Enabled!');
-
-  module.hot.accept('./server', () => {
-    console.log('🔁  HMR Reloading `./server`...');
-
-    try {
-      app = require('./server').default;
-      server.removeListener('request', currentApp);
-      server.on('request', app);
-      currentApp = app;
-    } catch (error) {
-      console.error(error);
-    }
-  });
-}
+  document.getElementById("root")
+);
