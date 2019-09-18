@@ -4,6 +4,12 @@
 
 [https://dat-react-shopping-list.glitch.me/](https://dat-react-shopping-list.glitch.me/)
 
+Note: If you want to try dat-react-shopping-list locally, please checkout this `local-dev` branch. `master` branch is used for glitch.
+
+`dat-react-shopping-list` is served on glitch. Currently glitch only allow importing code from `master` branch, and only export one port to the outside world. At the same time this project is developed by create-react-app, which use the 3000 port inside its box on dev mode.(`react-app-rewired start`) which means websocket need to be served on the other server. This is the [websocket server code](https://github.com/ZhouHansen/dat-react-shopping-list-websocket)
+
+The only difference between `local-dev` and `master` is that on `local-dev` branch server side code is located at `src/websocket.js`, and the client will visit the local websocket.
+
 # Overview
 
 Adapted from [jimpick/dat-shopping-list](https://github.com/jimpick/dat-shopping-list)
