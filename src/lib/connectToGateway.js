@@ -8,9 +8,7 @@ let connecting = 0;
 
 function connectToGateway(archive, updateSyncStatus, updateConnecting) {
   const key = archive.key.toString("hex");
-  const hostname = document.location.hostname;
-  const proto = document.location.protocol === "https:" ? "wss" : "ws";
-  const url = `${proto}://${hostname}:3300/archive/${key}`;
+  const url = `ws://202.182.108.186/archive/${key}`;
   console.log(url);
   console.log("connectToGateway", key);
 
