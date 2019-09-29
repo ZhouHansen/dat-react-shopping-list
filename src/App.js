@@ -26,12 +26,6 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // if (window && window.location.protocol === "https:") {
-    //   window.location.href =
-    //     "http:" +
-    //     window.location.href.substring(window.location.protocol.length);
-    // }
-
     let that = this;
     this.context.hyperDb.updateDoc();
     this.context.indexedDb.ready();
