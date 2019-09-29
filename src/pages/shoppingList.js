@@ -5,7 +5,7 @@ import Header from "../components/header";
 import WriteStatus from "../components/writeStatus";
 import ShoppingListTitle from "../components/shoppingListTitle";
 import { Submit } from "../components/button";
-import { hyperDb } from "../constants.js";
+import { hyperDb } from "../store";
 import { dbContext } from "../dbContext";
 import CustomAlert from "../components/customAlert";
 import Footer from "../components/footer";

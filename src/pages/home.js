@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import Header from "../components/header";
 import { Button } from "../components/button";
-import { hyperDb } from "../constants.js";
+import { hyperDb } from "../store";
 import { Link } from "react-router-dom";
 import Footer from "../components/footer";
 

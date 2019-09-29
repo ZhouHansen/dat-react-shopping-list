@@ -2,10 +2,10 @@ import React from "react";
 import App from "./App";
 import { Provider } from "react-redux";
 import createSagaMiddleware from "redux-saga";
-import { createStore, applyMiddleware, compose } from "redux";
+import { createStore, applyMiddleware, compose, combineReducers } from "redux";
 import thunk from "redux-thunk";
-import reducer from "./reducers";
 
+import * as cs from "./store";
 import rootSaga from "./sagas";
 
 import { dbContext } from "./dbContext";
@@ -15,7 +15,11 @@ import HyperDb from "./hyper-db.js";
 let sagaMiddleware = createSagaMiddleware();
 
 let store = createStore(
-  reducer,
+  combineReducers(
+    Object.keys(cs).reduce((sum, cur) => {
+      return { ...sum, ...cs[cur].reducer() };
+    }, {})
+  ),
   compose(applyMiddleware(thunk, sagaMiddleware))
 );
 let indexedDb = IndexedDb(store);

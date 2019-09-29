@@ -1,5 +1,5 @@
 import { put, takeEvery, all, delay, select } from "redux-saga/effects";
-import { customAlert, hyperDb } from "./constants";
+import { customAlert, hyperDb } from "./store";
 
 export const toggleCustomAlert = "toggleCustomAlert";
 export const toggleWriteStatusCollapsed = "toggleWriteStatusCollapsed";
@@ -8,36 +8,36 @@ export default function* rootSaga() {
   yield gen(
     function* toggleCustomAlert({ text }) {
       if (text) {
-        yield put(customAlert.action("Text", "update", text));
+        yield put(customAlert.update("Text", text));
       }
 
-      let prevShow = yield select(
+      let show = yield select(
         state => state[customAlert.constant("Show").name]
       );
 
-      yield put(customAlert.action("Show", "toggle"));
+      yield put(customAlert.update("Show", !show));
 
-      if (!prevShow) {
+      if (!show) {
         yield delay(100);
       }
 
-      yield put(customAlert.action("IsTrap", "toggle"));
+      let isTrap = yield select(
+        state => state[customAlert.constant("IsTrap").name]
+      );
+
+      yield put(customAlert.update("IsTrap", !isTrap));
     },
     function* toggleWriteStatusCollapsed() {
-      yield put(hyperDb.action("WriteStatusCollapsed", "toggle"));
+      let writeStatusCollapsed = yield select(
+        state => state[customAlert.constant("IsTrap").name]
+      );
 
-      if (window) {
-        let writeStatusCollapsed = yield select(
-          state => state[hyperDb.constant("WriteStatusCollapsed").name]
-        );
+      yield put(hyperDb.update("WriteStatusCollapsed", !writeStatusCollapsed));
 
-        console.log(writeStatusCollapsed);
-
-        window.localStorage.setItem(
-          "writeStatusCollapsed",
-          writeStatusCollapsed
-        );
-      }
+      window.localStorage.setItem(
+        "writeStatusCollapsed",
+        !writeStatusCollapsed
+      );
     }
   );
 }

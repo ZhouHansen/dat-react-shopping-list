@@ -4,7 +4,7 @@ import prettyHash from "pretty-hash";
 import { connect } from "react-redux";
 import { matchPath } from "react-router";
 
-import { hyperDb } from "../constants.js";
+import { hyperDb } from "../store";
 import history from "../history";
 import copy from "clipboard-copy";
 import { toggleCustomAlert } from "../sagas";

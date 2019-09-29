@@ -2,7 +2,7 @@ import hyperdrive from "@jimpick/hyperdrive-hyperdb-backend";
 import rai from "random-access-idb";
 import toBuffer from "to-buffer";
 import crypto from "hypercore-crypto";
-import { hyperDb, netWork } from "./constants";
+import { hyperDb, netWork } from "./store";
 import newId from "monotonic-timestamp-base36";
 import dumpWriters from "./lib/dumpWriters";
 import connectToGateway from "./lib/connectToGateway";
@@ -23,30 +23,30 @@ export default function(store, indexedDb) {
 
       let docKey = path ? path.params.doc : null;
 
-      dispatch(hyperDb.action("DocKey", "update", docKey));
-      dispatch(hyperDb.action("ShoppingList", "update", []));
-      dispatch(hyperDb.action("Error", "update", null));
-      dispatch(hyperDb.action("Authorized", "update", null));
-      dispatch(hyperDb.action("LocalKeyCopied", "update", false));
-      dispatch(hyperDb.action("DocTitle", "update", ""));
+      dispatch(hyperDb.update("DocKey", docKey));
+      dispatch(hyperDb.update("ShoppingList", []));
+      dispatch(hyperDb.update("Error", null));
+      dispatch(hyperDb.update("Authorized", null));
+      dispatch(hyperDb.update("LocalKeyCopied", false));
+      dispatch(hyperDb.update("DocTitle", ""));
 
       if (!docKey) {
-        dispatch(hyperDb.action("Loading", "update", false));
-        dispatch(hyperDb.action("Key", "update", null));
-        dispatch(hyperDb.action("Archive", "update", null));
+        dispatch(hyperDb.update("Loading", false));
+        dispatch(hyperDb.update("Key", null));
+        dispatch(hyperDb.update("Archive", null));
       } else {
         console.log(`Loading ${docKey}`);
-        dispatch(hyperDb.action("LocalFeedLength", "update", null));
+        dispatch(hyperDb.update("LocalFeedLength", null));
         indexedDb.fetchDocLastSync(docKey);
         let storage = rai(`doc-${docKey}`);
         let archive = hyperdrive(storage, docKey);
-        dispatch(hyperDb.action("Loading", "update", true));
+        dispatch(hyperDb.update("Loading", true));
         archive.ready(() => {
           console.log("hyperdrive ready");
           console.log("Local key:", archive.db.local.key.toString("hex"));
           dumpWriters(archive);
-          dispatch(hyperDb.action("Archive", "update", archive));
-          dispatch(hyperDb.action("Key", "update", archive.key));
+          dispatch(hyperDb.update("Archive", archive));
+          dispatch(hyperDb.update("Key", archive.key));
           let cancelGReplication = store.getState()[
             netWork.constant("CancelGReplication").name
           ];
@@ -54,9 +54,9 @@ export default function(store, indexedDb) {
             cancelGReplication();
           }
           dispatch(
-            netWork.action(
+            netWork.update(
               "CancelGReplication",
-              "update",
+
               connectToGateway(archive, updateSyncStatus, updateConnecting)
             )
           );
@@ -78,8 +78,8 @@ export default function(store, indexedDb) {
       let archive = hyperdrive(storage, key, { secretKey });
       archive.ready(() => {
         console.log("hyperdrive ready");
-        dispatch(hyperDb.action("Key", "update", key));
-        dispatch(hyperDb.action("Archive", "update", archive));
+        dispatch(hyperDb.update("Key", key));
+        dispatch(hyperDb.update("Archive", archive));
         let shoppingList = [
           "Rice",
           "Bananas",
@@ -235,31 +235,27 @@ export default function(store, indexedDb) {
     } = message;
     let hyperDbKey = store.getState()[hyperDb.constant("Key").name];
     if (hyperDbKey && key !== hyperDbKey.toString("hex")) return;
-    dispatch(netWork.action("Connected", "update", !!connectedPeers));
+    dispatch(netWork.update("Connected", !!connectedPeers));
     let loading = store.getState()[hyperDb.constant("Loading").name];
     dispatch(
-      netWork.action(
+      netWork.update(
         "LocalUploadLength",
-        "update",
+
         loading ? null : localUploadLength
       )
     );
     dispatch(
-      netWork.action(
+      netWork.update(
         "LocalDownloadLength",
-        "update",
+
         loading ? null : localDownloadLength
       )
     );
 
     if (hyperDbKey && connectedPeers) {
-      dispatch(netWork.action("Connecting", "update", false));
-      dispatch(
-        netWork.action("SyncedUploadLength", "update", remoteUploadLength)
-      );
-      dispatch(
-        netWork.action("SyncedDownloadLength", "update", remoteDownloadLength)
-      );
+      dispatch(netWork.update("Connecting", false));
+      dispatch(netWork.update("SyncedUploadLength", remoteUploadLength));
+      dispatch(netWork.update("SyncedDownloadLength", remoteDownloadLength));
       indexedDb.updateDocLastSync({
         key,
         syncedUploadLength: remoteUploadLength,
@@ -268,7 +264,7 @@ export default function(store, indexedDb) {
     }
   }
   function updateConnecting(connecting) {
-    dispatch(netWork.action("Connecting", "update", connecting));
+    dispatch(netWork.update("Connecting", connecting));
   }
   function readShoppingList() {
     let archive = store.getState()[hyperDb.constant("Archive").name];
@@ -294,9 +290,9 @@ export default function(store, indexedDb) {
           console.log("Done reading files.", title);
           updateAuthorized(err => {
             if (err) throw err;
-            dispatch(hyperDb.action("Loading", "update", false));
-            dispatch(hyperDb.action("DocTitle", "update", title));
-            dispatch(hyperDb.action("ShoppingList", "update", shoppingList));
+            dispatch(hyperDb.update("Loading", false));
+            dispatch(hyperDb.update("DocTitle", title));
+            dispatch(hyperDb.update("ShoppingList", shoppingList));
             indexedDb.writeNewDocumentRecord(docKey, title);
           });
         });
@@ -304,9 +300,7 @@ export default function(store, indexedDb) {
 
       function error(err) {
         console.log("Error", err);
-        dispatch(
-          hyperDb.action("Error", "update", "Error loading shopping list")
-        );
+        dispatch(hyperDb.update("Error", "Error loading shopping list"));
       }
 
       function readTitleFromDatJson(cb) {
@@ -360,7 +354,7 @@ export default function(store, indexedDb) {
       ) {
         dispatch({ type: toggleWriteStatusCollapsed });
       }
-      dispatch(hyperDb.action("Authorized", "update", newAuthorized));
+      dispatch(hyperDb.update("Authorized", newAuthorized));
       cb();
     });
   }

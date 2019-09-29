@@ -1,5 +1,3 @@
-import reducer from "./reducers/reducer";
-
 class ConstantSeries {
   constructor(prefix, constants) {
     this._constants = constants.reduce((sum, cur) => {
@@ -21,12 +19,12 @@ class ConstantSeries {
     return r;
   }
 
-  action(name, action_type, payload) {
-    return { type: this._constants[name][action_type], payload };
+  update(name, payload) {
+    return { type: this._constants[name].update, payload };
   }
 }
 
-export class Constant {
+class Constant {
   constructor(name, value) {
     this._name = name;
     this._value = value;
@@ -37,24 +35,25 @@ export class Constant {
   get name() {
     return this._name;
   }
-  get list() {
-    return "List_" + this._name;
-  }
-  get create() {
-    return "Create_" + this._name;
-  }
   get update() {
     return "Update_" + this._name;
   }
-  get remove() {
-    return "Remove_" + this._name;
+}
+
+function reducer(base, init) {
+  if (!base instanceof Constant) {
+    throw new Error("Expected base type to be Constant");
   }
-  get toggle() {
-    return "Toggle_" + this._name;
-  }
-  get add() {
-    return "Add_" + this._name;
-  }
+
+  return (state = init, { type, payload }) => {
+    switch (type) {
+      case base.update: {
+        return payload;
+      }
+      default:
+        return state;
+    }
+  };
 }
 
 export let hyperDb = new ConstantSeries("HyperDb", [

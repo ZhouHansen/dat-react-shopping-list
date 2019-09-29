@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import { netWork } from "./constants";
+import { netWork } from "./store";
 import { dbContext } from "./dbContext";
 
 import { Home, Create, ShoppingList, AddLink } from "./pages/index";
@@ -41,7 +41,7 @@ class App extends React.Component {
     window.addEventListener("offline", updateOnlineStatus);
 
     function updateOnlineStatus() {
-      that.props.dispatch(netWork.action("Status", "update", navigator.onLine));
+      that.props.dispatch(netWork.update("Status", navigator.onLine));
     }
   }
 

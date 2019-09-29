@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { hyperDb } from "../constants.js";
+import { hyperDb } from "../store";
 import { Button, Submit } from "./button.js";
 import copy from "clipboard-copy";
 import { dbContext } from "../dbContext";
@@ -71,7 +71,7 @@ class WriteStatus extends React.Component {
                       type: toggleCustomAlert,
                       text: 'Local Key" copied to clipboard'
                     });
-                    dispatch(hyperDb.action("LocalKeyCopied", "update", true));
+                    dispatch(hyperDb.update("LocalKeyCopied", true));
                   });
                 }}
               />

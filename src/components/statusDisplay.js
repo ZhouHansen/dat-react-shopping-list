@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { netWork, app } from "../constants.js";
+import { netWork, app } from "../store";
 import { ReactComponent as SvgIcon } from "../assets/ic_sync_black_24px.svg";
 
 @connect(state => ({

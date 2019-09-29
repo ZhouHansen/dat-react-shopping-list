@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { customAlert } from "../constants.js";
+import { customAlert } from "../store";
 import { dbContext } from "../dbContext";
 import { Button } from "./button.js";
 import FocusLock from "react-focus-lock";

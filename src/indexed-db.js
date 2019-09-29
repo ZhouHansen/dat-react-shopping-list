@@ -1,6 +1,6 @@
 import thunky from "thunky";
 import crypto from "hypercore-crypto";
-import { netWork, hyperDb } from "./constants";
+import { netWork, hyperDb } from "./store";
 import history from "./history";
 
 export default function(store) {
@@ -45,7 +45,7 @@ export default function(store) {
         documents.push(cursor.value);
         cursor.continue();
       } else {
-        dispatch(hyperDb.action("Documents", "update", documents));
+        dispatch(hyperDb.update("Documents", documents));
         if (cb) cb();
       }
     };
@@ -102,14 +102,12 @@ export default function(store) {
     request.onsuccess = function(event) {
       let data = event.target.result;
       if (!data) return;
-      dispatch(netWork.action("LastSync", "update", data.lastSync));
+      dispatch(netWork.update("LastSync", data.lastSync));
+      dispatch(netWork.update("SyncedUploadLength", data.syncedUploadLength));
       dispatch(
-        netWork.action("SyncedUploadLength", "update", data.syncedUploadLength)
-      );
-      dispatch(
-        netWork.action(
+        netWork.update(
           "SyncedDownloadLength",
-          "update",
+
           data.syncedDownloadLength
         )
       );
@@ -178,11 +176,11 @@ export default function(store) {
     },
 
     fetchDocLastSync(key) {
-      dispatch(netWork.action("LastSync", "update", null));
-      dispatch(netWork.action("SyncedUploadLength", "update", null));
-      dispatch(netWork.action("SyncedDownloadLength", "update", null));
-      dispatch(netWork.action("LocalUploadLength", "update", null));
-      dispatch(netWork.action("LocalDownloadLength", "update", null));
+      dispatch(netWork.update("LastSync", null));
+      dispatch(netWork.update("SyncedUploadLength", null));
+      dispatch(netWork.update("SyncedDownloadLength", null));
+      dispatch(netWork.update("LocalUploadLength", null));
+      dispatch(netWork.update("LocalDownloadLength", null));
 
       ready(function() {
         fetchDocLastSync(key);
