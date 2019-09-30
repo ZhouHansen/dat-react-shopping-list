@@ -29,7 +29,7 @@ export default function* rootSaga() {
     },
     function* toggleWriteStatusCollapsed() {
       let writeStatusCollapsed = yield select(
-        state => state[customAlert.constant("IsTrap").name]
+        state => state[hyperDb.constant("WriteStatusCollapsed").name]
       );
 
       yield put(hyperDb.update("WriteStatusCollapsed", !writeStatusCollapsed));

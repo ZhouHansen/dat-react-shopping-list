@@ -4,26 +4,18 @@ import styled from "styled-components";
 class GitHubButton extends React.Component {
   constructor() {
     super();
-    this.state = {
-      stargazersCount: null
-    };
+    this.state = {};
   }
 
-  componentDidMount() {
-    const url = `https://api.github.com/repos/zhouhansen/dat-react-shopping-list`;
-    window
-      .fetch(url)
-      .then(res => res.json())
-      .then(({ stargazers_count: stargazersCount }) => {
-        console.log(stargazersCount, "a");
-        this.setState({
-          stargazersCount
-        });
-      });
+  async componentDidMount() {
+    let res = await window.fetch(
+      `https://api.github.com/repos/zhouhansen/dat-react-shopping-list`
+    );
+    this.setState(await res.json());
   }
 
   render() {
-    const { stargazersCount } = this.state;
+    const { stargazers_count } = this.state;
     return (
       <div className={this.props.className}>
         <a
@@ -46,15 +38,15 @@ class GitHubButton extends React.Component {
           </svg>
           <span> Star</span>
         </a>
-        {stargazersCount ? (
+        {stargazers_count ? (
           <a
             href="https://github.com/zhouhansen/dat-react-shopping-list/stargazers"
             className="social-count"
-            aria-label={stargazersCount + " stargazers on GitHub"}
+            aria-label={stargazers_count + " stargazers on GitHub"}
           >
             <b></b>
             <i></i>
-            <span>{stargazersCount}</span>
+            <span>{stargazers_count}</span>
           </a>
         ) : (
           <div></div>

@@ -19,18 +19,18 @@ class ShoppingListTitle extends React.Component {
     this.copyUrl = this.copyUrl.bind(this);
   }
 
-  copyUrl() {
+  async copyUrl() {
     let path = matchPath(history.location.pathname, {
       path: "/doc/:doc",
       exact: true,
       strict: false
     });
 
-    copy(path.params.doc).then(() => {
-      this.props.dispatch({
-        type: toggleCustomAlert,
-        text: "Shopping list public key copied to clipboard"
-      });
+    await copy(path.params.doc);
+
+    this.props.dispatch({
+      type: toggleCustomAlert,
+      text: "Shopping list public key copied to clipboard"
     });
   }
 

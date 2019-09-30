@@ -65,14 +65,13 @@ class WriteStatus extends React.Component {
               </div>
               <Button
                 label="Copy to Clipboard"
-                onClick={() => {
-                  copy(localKey).then(() => {
-                    dispatch({
-                      type: toggleCustomAlert,
-                      text: 'Local Key" copied to clipboard'
-                    });
-                    dispatch(hyperDb.update("LocalKeyCopied", true));
+                onClick={async () => {
+                  await copy(localKey);
+                  dispatch({
+                    type: toggleCustomAlert,
+                    text: 'Local Key" copied to clipboard'
                   });
+                  dispatch(hyperDb.update("LocalKeyCopied", true));
                 }}
               />
               {localKeyCopied ? "Copied!" : null}
