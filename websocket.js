@@ -1,49 +1,38 @@
-import express from "express";
-import expressWebSocket from "express-ws";
 import websocketStream from "websocket-stream/stream";
 import ram from "random-access-memory";
 import hyperdrive from "@jimpick/hyperdrive-hyperdb-backend";
 import hyperdiscovery from "hyperdiscovery";
 import pump from "pump";
-import dumpWriters from "./lib/dumpWriters";
-import os from "os";
-
-let app = express();
-
-let router = express.Router();
-
-let server = app.listen(3300, getNetworkAddress());
+import dumpWriters from "./src/lib/dumpWriters";
 
 let maxArchives = 100;
 let archives = {};
 
-expressWebSocket(router, server, {
-  perMessageDeflate: false
-});
-
-setInterval(function cleanup() {
-  const sortedArchives = Object.values(archives).sort(
-    (a, b) => a.lastAccess - b.lastAccess
-  );
-  sortedArchives.forEach((entry, index) => {
-    const { archive, lastAccess, clients } = entry;
-    const key = archive.key && archive.key.toString("hex");
-    const peers = archive.db.source.peers.length;
-    console.log(
-      `  ${index} ${lastAccess} ${key} (${clients} clients, ${peers} peers)`
+export function cleanup() {
+  setInterval(function() {
+    const sortedArchives = Object.values(archives).sort(
+      (a, b) => a.lastAccess - b.lastAccess
     );
-  });
-  if (sortedArchives.length > maxArchives) {
-    for (let i = 0; i < sortedArchives.length - maxArchives; i++) {
-      const archive = sortedArchives[i].archive;
+    sortedArchives.forEach((entry, index) => {
+      const { archive, lastAccess, clients } = entry;
       const key = archive.key && archive.key.toString("hex");
-      console.log(`Releasing ${i} ${key}`);
-      sortedArchives[i].cancel();
+      const peers = archive.db.source.peers.length;
+      console.log(
+        `  ${index} ${lastAccess} ${key} (${clients} clients, ${peers} peers)`
+      );
+    });
+    if (sortedArchives.length > maxArchives) {
+      for (let i = 0; i < sortedArchives.length - maxArchives; i++) {
+        const archive = sortedArchives[i].archive;
+        const key = archive.key && archive.key.toString("hex");
+        console.log(`Releasing ${i} ${key}`);
+        sortedArchives[i].cancel();
+      }
     }
-  }
-}, 60 * 1000);
+  }, 60 * 1000);
+}
 
-router.ws("/archive/:key", (ws, req) => {
+export function cb(ws, req) {
   let archiveKey = req.params.key;
   console.log("Websocket initiated for", archiveKey);
   let archive;
@@ -95,17 +84,5 @@ router.ws("/archive/:key", (ws, req) => {
     if (sw) sw.close();
     archive.db.source.peers.forEach(peer => peer.end());
     delete archives[archiveKey];
-  }
-});
-
-function getNetworkAddress() {
-  const interfaces = os.networkInterfaces();
-  for (var name of Object.keys(interfaces)) {
-    for (var interf of interfaces[name]) {
-      const { address, family, internal } = interf;
-      if (family === "IPv4" && !internal) {
-        return address;
-      }
-    }
   }
 }

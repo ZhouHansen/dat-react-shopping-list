@@ -64,7 +64,7 @@ class StatusDisplay extends React.Component {
           connected = (
             <span className="offline">
               <span>
-                <img src="/ic_sync_problem_24px.svg" alt="" />
+                <img src="/ic_sync_problem_black_24px.svg" alt="" />
               </span>
               {pendingDownload} {pendingUpload}
             </span>
@@ -73,7 +73,7 @@ class StatusDisplay extends React.Component {
           connected = (
             <span className="offline">
               <span>
-                <img src="/ic_sync_disabled_24px.svg" alt="" />
+                <img src="/ic_sync_disabled_black_24px.svg" alt="" />
               </span>
               {pendingDownload} {pendingUpload}
             </span>

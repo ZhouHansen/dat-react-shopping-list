@@ -10,8 +10,9 @@ function connectToGateway(archive, updateSyncStatus, updateConnecting) {
   const key = archive.key.toString("hex");
   const hostname = document.location.hostname;
   const proto = document.location.protocol === "https:" ? "wss" : "ws";
-  const url = `${proto}://${hostname}:3300/archive/${key}`;
-  console.log(url);
+  const port = process.env.NODE_ENV === "production" ? 3000 : 3300;
+  const url = `${proto}://${hostname}:${port}/archive/${key}`;
+
   console.log("connectToGateway", key);
 
   let cancelled = false;

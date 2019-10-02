@@ -7,6 +7,7 @@ import { Button } from "../components/button";
 import { hyperDb } from "../store";
 import { Link } from "react-router-dom";
 import Footer from "../components/footer";
+import history from "../history";
 
 @connect(state => ({
   documents: state[hyperDb.constant("Documents").name]
@@ -47,15 +48,14 @@ class Home extends React.Component {
             {this.props.documents.map(doc => (
               <li
                 key={doc.key}
-                onClick={click}
-                onKeyDown={keydown}
+                onClick={() => {
+                  history.push(`/doc/${doc.key}`);
+                }}
                 tabIndex="0"
                 role="button"
               >
                 <span>{prettyHash(doc.key)}</span>
-                <a href={"/doc/" + doc.key} className="link" tabIndex="-1">
-                  {doc.name}
-                </a>
+                <p className="link">{doc.name}</p>
               </li>
             ))}
           </ul>
@@ -72,17 +72,6 @@ class Home extends React.Component {
         </section>
       </div>
     );
-
-    function click(event) {
-      let link = event.target.querySelector("a");
-      if (link) link.click();
-    }
-
-    function keydown(event) {
-      if (event.key === " " || event.key === "Enter") {
-        event.target.querySelector("a").click();
-      }
-    }
   }
 }
 

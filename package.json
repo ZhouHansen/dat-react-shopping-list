@@ -47,7 +47,8 @@
     "react-app-rewired": "^2.1.3"
   },
   "scripts": {
-    "start": "nodemon --exec babel-node src/websocket.js & react-app-rewired start"
+    "start": "nodemon --exec babel-node devServer.js & react-app-rewired start",
+    "deploy": "react-app-rewired build && forever -c babel-node start server.js"
   },
   "eslintConfig": {
     "extends": "react-app"
