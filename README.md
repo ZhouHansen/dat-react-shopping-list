@@ -4,7 +4,7 @@
 
 Adapted from [jimpick/dat-shopping-list](https://github.com/jimpick/dat-shopping-list)
 
-# Development
+# development
 
 ```bash
 $ git clone https://github.com/ZhouHansen/dat-react-shopping-list.git
@@ -13,10 +13,10 @@ $ npm install
 $ npm start
 ```
 
-# Demo
+# demo video
 
 [Watch on Youtube](https://www.youtube.com/watch?v=e48GsHj-nVk)
 
-# License
+# license
 
 MIT
