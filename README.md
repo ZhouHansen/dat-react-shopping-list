@@ -1,10 +1,10 @@
-# dat-react-shopping-list
+# Dat-react-shopping-list
 
 ![Logo](https://dat-shopping-list.glitch.me/img/dat-shopping-list-96.png)
 
 Adapted from [jimpick/dat-shopping-list](https://github.com/jimpick/dat-shopping-list)
 
-# development
+# Development
 
 ```bash
 $ git clone https://github.com/ZhouHansen/dat-react-shopping-list.git
@@ -13,10 +13,10 @@ $ npm install
 $ npm start
 ```
 
-# demo video
+# Demo Video
 
 [Watch on Youtube](https://www.youtube.com/watch?v=e48GsHj-nVk)
 
-# license
+# License
 
 MIT
