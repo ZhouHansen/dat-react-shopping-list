@@ -13,7 +13,7 @@ $ npm install
 $ npm start
 ```
 
-# Demo Video
+# Demo video
 
 [Watch on Youtube](https://www.youtube.com/watch?v=e48GsHj-nVk)
 
