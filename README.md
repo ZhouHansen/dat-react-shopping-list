@@ -6,7 +6,7 @@ Adapted from [jimpick/dat-shopping-list](https://github.com/jimpick/dat-shopping
 
 # Development
 
-```sh
+```bash
 $ git clone https://github.com/ZhouHansen/dat-react-shopping-list.git
 $ cd dat-react-shopping-list
 $ npm install
