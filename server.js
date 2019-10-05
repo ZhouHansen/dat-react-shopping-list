@@ -19,4 +19,4 @@ app.get("*", (_req, res) => {
   res.sendFile(path.join(__dirname + "/build/index.html"));
 });
 
-app.listen(80, () => console.log(`Example app listening on port 80!`));
+app.listen(3000, () => console.log(`Example app listening on port 3000!`));
