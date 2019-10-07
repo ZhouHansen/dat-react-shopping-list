@@ -48,6 +48,7 @@
   },
   "scripts": {
     "start": "nodemon --exec babel-node devServer.js & react-app-rewired start",
+    "build": "react-app-rewired build",
     "deploy": "react-app-rewired build && forever -c babel-node start server.js"
   },
   "eslintConfig": {
