@@ -9,7 +9,7 @@ expressWebSocket(app);
 
 cleanup();
 
-app.use(express.static("../build"));
+app.use(express.static(path.join(__dirname, "../build")));
 
 app.ws("/archive/:key", cb);
 
