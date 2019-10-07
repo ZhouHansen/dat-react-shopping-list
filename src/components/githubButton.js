@@ -46,7 +46,7 @@ class GitHubButton extends React.Component {
           >
             <b></b>
             <i></i>
-            <span>{stargazers_count}</span>
+            <span>{stargazers_count + 1}</span>
           </a>
         ) : (
           <div></div>
