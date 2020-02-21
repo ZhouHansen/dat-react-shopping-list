@@ -2,7 +2,7 @@ import hyperdrive from "@jimpick/hyperdrive-hyperdb-backend";
 import rai from "random-access-idb";
 import toBuffer from "to-buffer";
 import crypto from "hypercore-crypto";
-import { hyperDb, netWork } from "./store";
+import mystore from "./store";
 import newId from "monotonic-timestamp-base36";
 import dumpWriters from "./lib/dumpWriters";
 import connectToGateway from "./lib/connectToGateway";
@@ -11,8 +11,7 @@ import { matchPath } from "react-router";
 import { toggleCustomAlert, toggleWriteStatusCollapsed } from "./sagas";
 
 export default function(store, indexedDb) {
-  let dispatch = store.dispatch;
-
+  const dispatch = store.dispatch;
   return {
     updateDoc() {
       let path = matchPath(history.location.pathname, {
@@ -23,43 +22,46 @@ export default function(store, indexedDb) {
 
       let docKey = path ? path.params.doc : null;
 
-      dispatch(hyperDb.update("DocKey", docKey));
-      dispatch(hyperDb.update("ShoppingList", []));
-      dispatch(hyperDb.update("Error", null));
-      dispatch(hyperDb.update("Authorized", null));
-      dispatch(hyperDb.update("LocalKeyCopied", false));
-      dispatch(hyperDb.update("DocTitle", ""));
+      mystore.hyperDb.update({
+        docKey,
+        shoppingList: [],
+        error: null,
+        authorized: null,
+        localKeyCopied: false,
+        docTitle: ""
+      });
 
       if (!docKey) {
-        dispatch(hyperDb.update("Loading", false));
-        dispatch(hyperDb.update("Key", null));
-        dispatch(hyperDb.update("Archive", null));
+        mystore.hyperDb.update({
+          archive: null,
+          key: null,
+          loading: false
+        });
       } else {
         console.log(`Loading ${docKey}`);
-        dispatch(hyperDb.update("LocalFeedLength", null));
+        mystore.hyperDb.update("localFeedLength", null);
         indexedDb.fetchDocLastSync(docKey);
         let storage = rai(`doc-${docKey}`);
         let archive = hyperdrive(storage, docKey);
-        dispatch(hyperDb.update("Loading", true));
+        mystore.hyperDb.update("loading", true);
         archive.ready(() => {
           console.log("hyperdrive ready");
           console.log("Local key:", archive.db.local.key.toString("hex"));
           dumpWriters(archive);
-          dispatch(hyperDb.update("Archive", archive));
-          dispatch(hyperDb.update("Key", archive.key));
+          let key = archive.key;
+          mystore.hyperDb.update({ archive, key });
           let cancelGReplication = store.getState()[
-            netWork.constant("CancelGReplication").name
+            mystore.netWork.cancelGReplication
           ];
           if (cancelGReplication) {
             cancelGReplication();
           }
-          dispatch(
-            netWork.update(
-              "CancelGReplication",
 
-              connectToGateway(archive, updateSyncStatus, updateConnecting)
-            )
+          mystore.netWork.update(
+            "cancelGReplication",
+            connectToGateway(archive, updateSyncStatus, updateConnecting)
           );
+
           readShoppingList();
           archive.db.watch(() => {
             console.log("Archive updated:", archive.key.toString("hex"));
@@ -78,8 +80,7 @@ export default function(store, indexedDb) {
       let archive = hyperdrive(storage, key, { secretKey });
       archive.ready(() => {
         console.log("hyperdrive ready");
-        dispatch(hyperDb.update("Key", key));
-        dispatch(hyperDb.update("Archive", archive));
+        mystore.hyperDb.update({ archive, key });
         let shoppingList = [
           "Rice",
           "Bananas",
@@ -128,13 +129,11 @@ export default function(store, indexedDb) {
     },
 
     toggleBought(itemFile) {
-      let shoppingList = store.getState()[
-        hyperDb.constant("ShoppingList").name
-      ];
+      let shoppingList = store.getState()[mystore.hyperDb.shoppingList];
 
       let item = shoppingList.find(item => item.file === itemFile);
 
-      let archive = store.getState()[hyperDb.constant("Archive").name];
+      let archive = store.getState()[mystore.hyperDb.archive];
 
       let json = JSON.stringify({
         name: item.name,
@@ -150,7 +149,7 @@ export default function(store, indexedDb) {
 
     addShoppingItem(name) {
       console.log("addItem", name);
-      let archive = store.getState()[hyperDb.constant("Archive").name];
+      let archive = store.getState()[mystore.hyperDb.archive];
 
       const json = JSON.stringify({
         name,
@@ -167,13 +166,11 @@ export default function(store, indexedDb) {
     },
 
     removeShoppingItem(itemFile) {
-      let shoppingList = store.getState()[
-        hyperDb.constant("ShoppingList").name
-      ];
+      let shoppingList = store.getState()[mystore.hyperDb.shoppingList];
 
       let item = shoppingList.find(item => item.file === itemFile);
 
-      let archive = store.getState()[hyperDb.constant("Archive").name];
+      let archive = store.getState()[mystore.hyperDb.archive];
 
       archive.unlink(`/shopping-list/${item.file}`, err => {
         if (err) throw err;
@@ -205,7 +202,7 @@ export default function(store, indexedDb) {
         return;
       }
 
-      let archive = store.getState()[hyperDb.constant("Archive").name];
+      let archive = store.getState()[mystore.hyperDb.archive];
 
       archive.authorize(toBuffer(writerKey, "hex"), err => {
         if (err) {
@@ -233,29 +230,23 @@ export default function(store, indexedDb) {
       localDownloadLength,
       remoteDownloadLength
     } = message;
-    let hyperDbKey = store.getState()[hyperDb.constant("Key").name];
+    let hyperDbKey = store.getState()[mystore.hyperDb.key];
     if (hyperDbKey && key !== hyperDbKey.toString("hex")) return;
-    dispatch(netWork.update("Connected", !!connectedPeers));
-    let loading = store.getState()[hyperDb.constant("Loading").name];
-    dispatch(
-      netWork.update(
-        "LocalUploadLength",
 
-        loading ? null : localUploadLength
-      )
-    );
-    dispatch(
-      netWork.update(
-        "LocalDownloadLength",
-
-        loading ? null : localDownloadLength
-      )
-    );
+    let loading = store.getState()[mystore.hyperDb.loading];
+    mystore.netWork.update({
+      connected: !!connectedPeers,
+      localUploadLength: loading ? null : localUploadLength,
+      localDownloadLength: loading ? null : localDownloadLength
+    });
 
     if (hyperDbKey && connectedPeers) {
-      dispatch(netWork.update("Connecting", false));
-      dispatch(netWork.update("SyncedUploadLength", remoteUploadLength));
-      dispatch(netWork.update("SyncedDownloadLength", remoteDownloadLength));
+      mystore.netWork.update({
+        connecting: false,
+        syncedUploadLength: remoteUploadLength,
+        syncedDownloadLength: remoteDownloadLength
+      });
+
       indexedDb.updateDocLastSync({
         key,
         syncedUploadLength: remoteUploadLength,
@@ -264,11 +255,11 @@ export default function(store, indexedDb) {
     }
   }
   function updateConnecting(connecting) {
-    dispatch(netWork.update("Connecting", connecting));
+    mystore.netWork.update("connecting", connecting);
   }
   function readShoppingList() {
-    let archive = store.getState()[hyperDb.constant("Archive").name];
-    let docKey = store.getState()[hyperDb.constant("DocKey").name];
+    let archive = store.getState()[mystore.hyperDb.archive];
+    let docKey = store.getState()[mystore.hyperDb.docKey];
     let shoppingList = [];
 
     archive.readdir("/shopping-list", (err, fileList) => {
@@ -290,17 +281,20 @@ export default function(store, indexedDb) {
           console.log("Done reading files.", title);
           updateAuthorized(err => {
             if (err) throw err;
-            dispatch(hyperDb.update("Loading", false));
-            dispatch(hyperDb.update("DocTitle", title));
-            dispatch(hyperDb.update("ShoppingList", shoppingList));
+            mystore.hyperDb.update({
+              loading: false,
+              docTitle: title,
+              shoppingList
+            });
+
             indexedDb.writeNewDocumentRecord(docKey, title);
           });
         });
       });
 
       function error(err) {
-        console.log("Error", err);
-        dispatch(hyperDb.update("Error", "Error loading shopping list"));
+        console.log("error", err);
+        mystore.hyperDb.update("error", "Error loading shopping list");
       }
 
       function readTitleFromDatJson(cb) {
@@ -338,9 +332,9 @@ export default function(store, indexedDb) {
     });
   }
   function updateAuthorized(cb) {
-    let authorized = store.getState()[hyperDb.constant("Authorized").name];
+    let authorized = store.getState()[mystore.hyperDb.authorized];
     if (authorized) return cb();
-    const db = store.getState()[hyperDb.constant("Archive").name].db;
+    const db = store.getState()[mystore.hyperDb.archive].db;
     console.log("Checking if local key is authorized");
     db.authorized(db.local.key, (err, newAuthorized) => {
       if (err) {
@@ -350,11 +344,11 @@ export default function(store, indexedDb) {
       if (
         authorized === false &&
         newAuthorized === true &&
-        store.getState()[hyperDb.constant("WriteStatusCollapsed").name]
+        store.getState()[mystore.hyperDb.writeStatusCollapsed]
       ) {
         dispatch({ type: toggleWriteStatusCollapsed });
       }
-      dispatch(hyperDb.update("Authorized", newAuthorized));
+      mystore.hyperDb.update("authorized", newAuthorized);
       cb();
     });
   }

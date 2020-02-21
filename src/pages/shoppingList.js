@@ -5,17 +5,17 @@ import Header from "../components/header";
 import WriteStatus from "../components/writeStatus";
 import ShoppingListTitle from "../components/shoppingListTitle";
 import { Submit } from "../components/button";
-import { hyperDb } from "../store";
+import mystore from "../store";
 import { dbContext } from "../dbContext";
 import CustomAlert from "../components/customAlert";
 import Footer from "../components/footer";
 
 @connect(state => ({
-  shoppingList: state[hyperDb.constant("ShoppingList").name],
-  loading: state[hyperDb.constant("Loading").name],
-  error: state[hyperDb.constant("Error").name]
+  shoppingList: state[mystore.hyperDb.shoppingList],
+  loading: state[mystore.hyperDb.loading],
+  error: state[mystore.hyperDb.error]
 }))
-class ShoppingList extends React.Component {
+class shoppingList extends React.Component {
   static contextType = dbContext;
 
   constructor() {
@@ -142,7 +142,7 @@ class ShoppingList extends React.Component {
   }
 }
 
-export default styled(ShoppingList)`
+export default styled(shoppingList)`
   .content {
     margin: 1rem 1rem 2rem 1rem;
   }

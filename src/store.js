@@ -1,96 +1,104 @@
+import createSagaMiddleware from "redux-saga";
+import { createStore, applyMiddleware, compose, combineReducers } from "redux";
+import rootSaga from "./sagas";
+import thunk from "redux-thunk";
+
+let sagaMiddleware = createSagaMiddleware();
+
+let initState = {
+  hyperDb: [
+    { name: "documents", value: [] },
+    { name: "shoppingList", value: [] },
+    { name: "key", value: null },
+    { name: "archive", value: null },
+    { name: "error", value: null },
+    { name: "authorized", value: null },
+    { name: "localKeyCopied", value: null },
+    { name: "docTitle", value: null },
+    { name: "loading", value: false },
+    { name: "writeStatusCollapsed", value: true },
+    { name: "localFeedLength", value: false },
+    { name: "docKey", value: null }
+  ],
+  netWork: [
+    { name: "lastSync", value: [] },
+    { name: "syncedUploadLength", value: [] },
+    { name: "syncedDownloadLength", value: null },
+    { name: "localUploadLength", value: null },
+    { name: "localDownloadLength", value: null },
+    { name: "cancelGReplication", value: null },
+    { name: "connecting", value: null },
+    { name: "connected", value: null },
+    { name: "status", value: null }
+  ],
+  app: [
+    { name: "devMode", value: false },
+    { name: "devLabel", value: null },
+    { name: "serviceWorker", value: null }
+  ],
+  customAlert: [
+    { name: "show", value: false },
+    { name: "isTrap", value: false },
+    { name: "text", value: "" }
+  ]
+};
+
+export let store = createStore(
+  combineReducers(
+    Object.keys(initState).reduce((sum, cur) => {
+      return { ...sum, ...reducer(initState[cur], cur) };
+    }, {})
+  ),
+  compose(applyMiddleware(thunk, sagaMiddleware))
+);
+
 class ConstantSeries {
-  constructor(prefix, constants) {
-    this._constants = constants.reduce((sum, cur) => {
-      sum[cur.name] = new Constant(prefix + cur.name, cur.value);
-      return sum;
-    }, {});
-  }
-
-  constant(name) {
-    return this._constants[name];
-  }
-
-  reducer() {
-    let r = {};
-    for (var i in this._constants) {
-      let c = this._constants[i];
-      r[c.name] = reducer(c, c.value);
-    }
-    return r;
+  constructor(prefix, initState) {
+    initState[prefix].map(cur => {
+      this[cur.name] = prefix + cur.name;
+      return null;
+    });
   }
 
   update(name, payload) {
-    return { type: this._constants[name].update, payload };
-  }
-}
-
-class Constant {
-  constructor(name, value) {
-    this._name = name;
-    this._value = value;
-  }
-  get value() {
-    return this._value;
-  }
-  get name() {
-    return this._name;
-  }
-  get update() {
-    return "Update_" + this._name;
-  }
-}
-
-function reducer(base, init) {
-  if (!base instanceof Constant) {
-    throw new Error("Expected base type to be Constant");
-  }
-
-  return (state = init, { type, payload }) => {
-    switch (type) {
-      case base.update: {
-        return payload;
+    if (typeof name === "object" && name !== null) {
+      for (let key in name) {
+        store.dispatch({ type: "Update_" + this[key], payload: name[key] });
       }
-      default:
-        return state;
+    } else if (typeof name === "string") {
+      store.dispatch({ type: "Update_" + this[name], payload });
     }
-  };
+  }
 }
 
-export let hyperDb = new ConstantSeries("HyperDb", [
-  { name: "Documents", value: [] },
-  { name: "ShoppingList", value: [] },
-  { name: "Key", value: null },
-  { name: "Archive", value: null },
-  { name: "Error", value: null },
-  { name: "Authorized", value: null },
-  { name: "LocalKeyCopied", value: null },
-  { name: "DocTitle", value: null },
-  { name: "Loading", value: false },
-  { name: "WriteStatusCollapsed", value: true },
-  { name: "LocalFeedLength", value: false },
-  { name: "DocKey", value: null }
-]);
+function reducer(arr, name) {
+  let r = {};
 
-export let netWork = new ConstantSeries("NetWork", [
-  { name: "LastSync", value: [] },
-  { name: "SyncedUploadLength", value: [] },
-  { name: "SyncedDownloadLength", value: null },
-  { name: "LocalUploadLength", value: null },
-  { name: "LocalDownloadLength", value: null },
-  { name: "CancelGReplication", value: null },
-  { name: "Connecting", value: null },
-  { name: "Connected", value: null },
-  { name: "Status", value: null }
-]);
+  arr.map(cur => {
+    r[name + cur.name] = (state = cur.value, { type, payload }) => {
+      switch (type) {
+        case "Update_" + name + cur.name: {
+          return payload;
+        }
+        default:
+          return state;
+      }
+    };
 
-export let app = new ConstantSeries("App", [
-  { name: "DevMode", value: false },
-  { name: "DevLabel", value: null },
-  { name: "ServiceWorker", value: null }
-]);
+    return null;
+  });
 
-export let customAlert = new ConstantSeries("CustomAlert", [
-  { name: "Show", value: false },
-  { name: "IsTrap", value: false },
-  { name: "Text", value: "" }
-]);
+  return r;
+}
+
+function rechyons(initState) {
+  var r = {};
+  for (let key in initState) {
+    r[key] = new ConstantSeries(key, initState);
+  }
+  return r;
+}
+
+sagaMiddleware.run(rootSaga);
+
+export default rechyons(initState);

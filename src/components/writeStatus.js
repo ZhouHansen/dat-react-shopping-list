@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { hyperDb } from "../store";
+import mystore from "../store";
 import { Button, Submit } from "./button.js";
 import copy from "clipboard-copy";
 import { dbContext } from "../dbContext";
@@ -9,10 +9,10 @@ import { toggleCustomAlert, toggleWriteStatusCollapsed } from "../sagas";
 import raw from "nanohtml/raw";
 
 @connect(state => ({
-  archive: state[hyperDb.constant("Archive").name],
-  writeStatusCollapsed: state[hyperDb.constant("WriteStatusCollapsed").name],
-  authorized: state[hyperDb.constant("Authorized").name],
-  localKeyCopied: state[hyperDb.constant("LocalKeyCopied").name]
+  archive: state[mystore.hyperDb.archive],
+  writeStatusCollapsed: state[mystore.hyperDb.writeStatusCollapsed],
+  authorized: state[mystore.hyperDb.authorized],
+  localKeyCopied: state[mystore.hyperDb.localKeyCopied]
 }))
 class WriteStatus extends React.Component {
   static contextType = dbContext;
@@ -71,7 +71,7 @@ class WriteStatus extends React.Component {
                     type: toggleCustomAlert,
                     text: 'Local Key" copied to clipboard'
                   });
-                  dispatch(hyperDb.update("LocalKeyCopied", true));
+                  mystore.hyperDb.update("localKeyCopied", true);
                 }}
               />
               {localKeyCopied ? "Copied!" : null}

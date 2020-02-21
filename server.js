@@ -9,6 +9,7 @@ expressWebSocket(app);
 
 cleanup();
 
+// if use 'express.static('../build') directly, express will still serve the current directory's `build` folder.
 app.use(express.static(path.join(__dirname, "../build")));
 
 app.ws("/archive/:key", cb);

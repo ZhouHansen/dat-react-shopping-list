@@ -4,14 +4,14 @@ import prettyHash from "pretty-hash";
 import { connect } from "react-redux";
 import { matchPath } from "react-router";
 
-import { hyperDb } from "../store";
+import mystore from "../store";
 import history from "../history";
 import copy from "clipboard-copy";
 import { toggleCustomAlert } from "../sagas";
 
 @connect(state => ({
-  docTitle: state[hyperDb.constant("DocTitle").name],
-  hyperDbKey: state[hyperDb.constant("Key").name]
+  docTitle: state[mystore.hyperDb.docTitle],
+  hyperDbKey: state[mystore.hyperDb.key]
 }))
 class ShoppingListTitle extends React.Component {
   constructor() {

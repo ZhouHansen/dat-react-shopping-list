@@ -1,10 +1,9 @@
 import thunky from "thunky";
 import crypto from "hypercore-crypto";
-import { netWork, hyperDb } from "./store";
+import mystore from "./store";
 import history from "./history";
 
 export default function(store) {
-  let dispatch = store.dispatch;
   let ready = thunky(openDocumentsDB);
   let db = null;
 
@@ -45,7 +44,7 @@ export default function(store) {
         documents.push(cursor.value);
         cursor.continue();
       } else {
-        dispatch(hyperDb.update("Documents", documents));
+        mystore.hyperDb.update({ documents });
         if (cb) cb();
       }
     };
@@ -102,15 +101,12 @@ export default function(store) {
     request.onsuccess = function(event) {
       let data = event.target.result;
       if (!data) return;
-      dispatch(netWork.update("LastSync", data.lastSync));
-      dispatch(netWork.update("SyncedUploadLength", data.syncedUploadLength));
-      dispatch(
-        netWork.update(
-          "SyncedDownloadLength",
-
-          data.syncedDownloadLength
-        )
-      );
+      const { lastSync, syncedUploadLength, syncedDownloadLength } = data;
+      mystore.netWork.update({
+        lastSync,
+        syncedUploadLength,
+        syncedDownloadLength
+      });
     };
     request.onerror = function(event) {
       console.error("fetchDocLastSync error", event);
@@ -164,7 +160,7 @@ export default function(store) {
 
     writeNewDocumentRecord(key, name) {
       ready(function() {
-        let documents = store.getState()[hyperDb.constant("Documents").name];
+        let documents = store.getState()[mystore.hyperDb.documents];
         if (documents.find(doc => doc.key === key)) return;
         writeNewDocumentRecord(key, name, err => {
           if (err) {
@@ -176,11 +172,13 @@ export default function(store) {
     },
 
     fetchDocLastSync(key) {
-      dispatch(netWork.update("LastSync", null));
-      dispatch(netWork.update("SyncedUploadLength", null));
-      dispatch(netWork.update("SyncedDownloadLength", null));
-      dispatch(netWork.update("LocalUploadLength", null));
-      dispatch(netWork.update("LocalDownloadLength", null));
+      mystore.netWork.update({
+        lastSync: null,
+        syncedUploadLength: null,
+        syncedDownloadLength: null,
+        localUploadLength: null,
+        localDownloadLength: null
+      });
 
       ready(function() {
         fetchDocLastSync(key);

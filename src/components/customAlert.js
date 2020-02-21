@@ -1,16 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { customAlert } from "../store";
+import mystore from "../store";
 import { dbContext } from "../dbContext";
 import { Button } from "./button.js";
 import FocusLock from "react-focus-lock";
 import { toggleCustomAlert } from "../sagas";
 
 @connect(state => ({
-  show: state[customAlert.constant("Show").name],
-  text: state[customAlert.constant("Text").name],
-  isTrap: state[customAlert.constant("IsTrap").name]
+  show: state[mystore.customAlert.show],
+  text: state[mystore.customAlert.text],
+  isTrap: state[mystore.customAlert.isTrap]
 }))
 class Alert extends React.Component {
   static contextType = dbContext;

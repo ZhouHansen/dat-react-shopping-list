@@ -1,20 +1,20 @@
 import React from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { netWork, app } from "../store";
+import mystore from "../store";
 import { ReactComponent as SvgIcon } from "../assets/ic_sync_black_24px.svg";
 
 @connect(state => ({
-  localUploadLength: state[netWork.constant("LocalUploadLength").name],
-  syncedUploadLength: state[netWork.constant("SyncedUploadLength").name],
-  localDownloadLength: state[netWork.constant("LocalDownloadLength").name],
-  syncedDownloadLength: state[netWork.constant("SyncedDownloadLength").name],
-  networkStatus: state[netWork.constant("Status").name],
-  connected: state[netWork.constant("Connected").name],
-  connecting: state[netWork.constant("Connecting").name],
-  devMode: state[app.constant("DevMode").name],
-  devLabel: state[app.constant("DevLabel").name],
-  serviceWorker: state[app.constant("ServiceWorker").name]
+  localUploadLength: state[mystore.netWork.localUploadLength],
+  syncedUploadLength: state[mystore.netWork.syncedUploadLength],
+  localDownloadLength: state[mystore.netWork.localDownloadLength],
+  syncedDownloadLength: state[mystore.netWork.syncedDownloadLength],
+  networkStatus: state[mystore.netWork.status],
+  connected: state[mystore.netWork.connected],
+  connecting: state[mystore.netWork.connecting],
+  devMode: state[mystore.app.devMode],
+  devLabel: state[mystore.app.devLabel],
+  serviceWorker: state[mystore.app.serviceWorker]
 }))
 class StatusDisplay extends React.Component {
   render() {
