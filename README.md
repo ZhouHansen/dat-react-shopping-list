@@ -4,6 +4,8 @@
 
 Adapted from [jimpick/dat-shopping-list](https://github.com/jimpick/dat-shopping-list)
 
+Using redux framework [rechyons](https://github.com/ZhouHansen/rechyons) to simplify redux state management to utmost, no longer write actions and reducers at all, and still keep immutable.
+
 # Development
 
 ```bash
@@ -12,10 +14,6 @@ $ cd dat-react-shopping-list
 $ npm install
 $ npm start
 ```
-
-# Demo Video
-
-[Watch on Youtube](https://www.youtube.com/watch?v=e48GsHj-nVk)
 
 # License
 
