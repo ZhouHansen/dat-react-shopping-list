@@ -5,7 +5,6 @@ import mystore from "./store";
 import { dbContext } from "./dbContext";
 
 import { Home, Create, shoppingList, AddLink } from "./pages/index";
-import "./App.css";
 import "dat-colors/index.css";
 
 @connect(state => ({

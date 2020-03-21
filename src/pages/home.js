@@ -1,7 +1,6 @@
 import React from "react";
 import prettyHash from "pretty-hash";
 import { connect } from "react-redux";
-import styled from "styled-components";
 import Header from "../components/header";
 import { Button } from "../components/button";
 import mystore from "../store";
@@ -17,13 +16,18 @@ class Home extends React.Component {
     return (
       <div className={this.props.className}>
         <Header></Header>
-        <section className="content">
-          <div className="uvp">
-            <h4 onClick={() => {}}>Test drive multi-writer Dat!</h4>
+        <section className="m-4 mb-8">
+          <div className="shadow-lg p-4 bg-white">
+            <h4 className="m-4 m-2 text-xl text-center">
+              Test drive multi-writer Dat!
+            </h4>
             <p>
               This is a <b>Progressive Web App</b> built to demonstrate the use
               of the new <b> multi-writer</b> capabilities from the{" "}
-              <a href="https://datproject.org/" className="link">
+              <a
+                href="https://datproject.org/"
+                className="no-underline text-green-500"
+              >
                 Dat Project
               </a>
               .
@@ -33,7 +37,7 @@ class Home extends React.Component {
               between multiple devices or users. Read the{" "}
               <a
                 href="https://blog.datproject.org/2018/05/14/dat-shopping-list/"
-                className="link"
+                className="no-underline text-green-500"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -42,11 +46,23 @@ class Home extends React.Component {
             </p>
           </div>
           <header>
-            {this.props.documents.length > 0 ? <h3>Shopping Lists</h3> : ""}
+            {this.props.documents.length > 0 ? (
+              <h3 className="mt-4">Shopping Lists</h3>
+            ) : (
+              ""
+            )}
           </header>
-          <ul>
+          <ul className="pt-0 px-1 pb-2">
             {this.props.documents.map(doc => (
               <li
+                className="
+                  bg-white
+                  cursor-pointer 
+                  text-lg list-none 
+                  mb-2 px-2 border-solid 
+                  border border-gray-300 
+                  rounded-lg min-h-12 
+                  relative flex"
                 key={doc.key}
                 onClick={() => {
                   history.push(`/doc/${doc.key}`);
@@ -54,18 +70,54 @@ class Home extends React.Component {
                 tabIndex="0"
                 role="button"
               >
-                <span>{prettyHash(doc.key)}</span>
-                <p className="link">{doc.name}</p>
+                <span
+                  className="
+                    text-xs font-mono
+                    leading-none absolute
+                    right-0 mr-2 mt-1 
+                    pointer-events-none"
+                >
+                  {prettyHash(doc.key)}
+                </span>
+                <p className="my-4 mx-2 no-underline text-green-500">
+                  {doc.name}
+                </p>
               </li>
             ))}
           </ul>
-          <div className={this.props.documents.length > 0 ? "notSolo" : "solo"}>
-            <img src="bg-landing-page.svg" alt="" />
-            <Link className="createButton" to={"/create"}>
-              <Button label="Create a new Shopping List" />
+          <div
+            className={
+              this.props.documents.length > 0
+                ? "flex justify-between mx-2 mt-0 mb-4"
+                : "relative h-64 flex items-center justify-center flex-col mb-12"
+            }
+          >
+            <img
+              className={
+                this.props.documents.length > 0 ? "hidden" : "absolute"
+              }
+              src="bg-landing-page.svg"
+              alt=""
+            />
+            <Link className="mr-2" to={"/create"}>
+              <Button
+                className={
+                  "text-white " +
+                  (this.props.documents.length > 0 ? "" : "h-16")
+                }
+                label="Create a new Shopping List"
+              />
             </Link>
-            <Link className="addLinkButton" to={"/addLink"}>
-              <Button label="Have a Link? Paste it Here" />
+            <Link className="ml-2" to={"/addLink"}>
+              <Button
+                className={
+                  "border-solid border border-green-500 text-green-500 bg-white " +
+                  (this.props.documents.length > 0
+                    ? ""
+                    : "h-16 mt-5 h-10 text-sm font-medium")
+                }
+                label="Have a Link? Paste it Here"
+              />
             </Link>
           </div>
           <Footer />
@@ -75,99 +127,4 @@ class Home extends React.Component {
   }
 }
 
-export default styled(Home)`
-  .content {
-    margin: 1rem 1rem 2rem 1rem;
-  }
-  .uvp {
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    padding: 1em;
-    background-color: var(--color-white);
-  }
-  .uvp h4 {
-    margin: 0.5rem 1rem 1rem 1rem;
-    font-size: 1.3rem;
-    text-align: center;
-  }
-  h3 {
-    margin-top: 2rem;
-  }
-  ul {
-    padding: 0 0.3rem 0.5rem 0.3rem;
-  }
-  li {
-    list-style-type: none;
-    border: 1px solid var(--color-neutral-20);
-    border-radius: 0.5rem;
-    margin: 0 0 0.5rem 0;
-    padding: 0 0.5rem;
-    min-height: 3rem;
-    position: relative;
-    cursor: pointer;
-    font-size: 1.2rem;
-    background-color: var(--color-white);
-    display: flex;
-
-    .link {
-      margin: 1rem 0.5rem;
-    }
-
-    span {
-      font-size: 12px;
-      font-family: monospace;
-      line-height: 1rem;
-      position: absolute;
-      top: 0.1rem;
-      right: 0.3rem;
-      pointer-events: none;
-    }
-  }
-  .solo {
-    position: relative;
-    height: 16rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    margin-bottom: 3rem;
-
-    button {
-      height: 4rem;
-    }
-
-    .addLinkButton button {
-      margin-top: 1.5rem;
-      height: 2.5rem;
-      font-size: 0.8rem;
-      font-weight: 500;
-    }
-
-    img {
-      position: absolute;
-    }
-  }
-
-  .notSolo {
-    display: flex;
-    justify-content: space-between;
-    margin: 0 0.5rem 2rem 0.5rem;
-
-    .createButton {
-      margin-right: 0.5rem;
-    }
-
-    img {
-      display: none;
-    }
-
-    .addLinkButton {
-      margin-left: 0.5rem;
-    }
-  }
-
-  .addLinkButton button {
-    color: var(--color-green);
-    background: var(--color-white);
-    border-color: var(--color-green);
-  }
-`;
+export default Home;

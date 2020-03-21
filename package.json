@@ -5,6 +5,8 @@
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "@jimpick/hyperdrive-hyperdb-backend": "^9.12.3-10",
+    "@material-ui/core": "^4.9.7",
+    "autoprefixer": "^9.7.4",
     "clipboard-copy": "^3.1.0",
     "customize-cra": "^0.7.0",
     "dat-colors": "^3.5.1",
@@ -30,6 +32,7 @@
     "redux": "^4.0.4",
     "redux-saga": "^1.0.5",
     "styled-components": "^4.3.2",
+    "tailwindcss": "^1.2.0",
     "thunky": "^1.0.3",
     "to-buffer": "^1.1.1",
     "websocket-stream": "^5.5.0"
