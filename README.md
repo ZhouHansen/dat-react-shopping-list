@@ -18,3 +18,7 @@ $ npm start
 # License
 
 MIT
+
+## Migrate
+
+Because I lost my 2 factor authentic token, this project has moved to https://github.com/zhouhanseng/dat-react-shopping-list
